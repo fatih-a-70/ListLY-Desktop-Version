@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="root"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.listly.HomeboxController"
+            prefWidth="480.0" prefHeight="380.0">
+
+    <children>
+        <Label fx:id="tvCategory"
+               layoutX="10.0" layoutY="8.0"
+               text="Category"
+               style="-fx-font-size:18; -fx-font-weight:bold; -fx-text-fill:#030320;"/>
+
+        <ListView fx:id="rvRows"
+                  layoutX="10.0" layoutY="40.0"
+                  prefWidth="460.0" prefHeight="332.0"
+                  style="-fx-background-color: transparent; -fx-control-inner-background: transparent;"/>
+    </children>
+</AnchorPane>

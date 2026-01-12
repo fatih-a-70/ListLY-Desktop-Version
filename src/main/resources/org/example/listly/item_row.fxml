@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<?import javafx.geometry.Orientation?>
+<AnchorPane fx:id="root"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="480.0" prefHeight="330.0">
+
+    <children>
+        <ListView fx:id="rvHorizontalLists"
+                  layoutX="4.0" layoutY="4.0"
+                  prefWidth="472.0" prefHeight="322.0"
+                  orientation="HORIZONTAL"
+                  style="-fx-background-color: transparent; -fx-control-inner-background: transparent;"/>
+    </children>
+</AnchorPane>

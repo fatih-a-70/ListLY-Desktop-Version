@@ -1,0 +1,43 @@
+/* Hide scrollbars completely while keeping scroll functionality */
+.list-view .scroll-bar:vertical {
+    -fx-opacity: 0;
+    -fx-pref-width: 0;
+}
+
+.list-view .scroll-bar:horizontal {
+    -fx-opacity: 0;
+    -fx-pref-height: 0;
+}
+
+.list-view .scroll-bar:vertical .track,
+.list-view .scroll-bar:horizontal .track {
+    -fx-background-color: transparent;
+    -fx-opacity: 0;
+}
+
+.list-view .scroll-bar:vertical .thumb,
+.list-view .scroll-bar:horizontal .thumb {
+    -fx-background-color: transparent;
+    -fx-opacity: 0;
+}
+
+.list-view .scroll-bar:vertical .increment-button,
+.list-view .scroll-bar:vertical .decrement-button,
+.list-view .scroll-bar:horizontal .increment-button,
+.list-view .scroll-bar:horizontal .decrement-button {
+    -fx-opacity: 0;
+    -fx-padding: 0;
+}
+
+/* Enable smooth scrolling */
+.list-view {
+    -fx-focus-traversable: false;
+}
+
+.list-view .list-cell {
+    -fx-background-color: transparent;
+}
+
+.list-view:focused .list-cell:focused {
+    -fx-background-color: transparent;
+}

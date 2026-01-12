@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="root"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.listly.DeadlineController"
+            prefWidth="500.0" prefHeight="800.0">
+
+    <children>
+        <ListView fx:id="recycler"
+                  layoutX="0.0" layoutY="0.0"
+                  prefWidth="500.0" prefHeight="740.0"/>
+
+        <ImageView fx:id="imagebutton6"
+                   layoutX="226.0" layoutY="740.0"
+                   fitWidth="48.0" fitHeight="48.0"
+                   pickOnBounds="true" preserveRatio="true"/>
+    </children>
+</AnchorPane>
