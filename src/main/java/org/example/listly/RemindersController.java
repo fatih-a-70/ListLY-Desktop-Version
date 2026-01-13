@@ -3,6 +3,11 @@ package org.example.listly;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
+import javafx.application.Platform;
+import java.time.LocalTime;
+import java.time.Duration;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class RemindersController {
 
@@ -20,6 +25,7 @@ public class RemindersController {
     @FXML private ToggleButton sw2;
     @FXML private ToggleButton sw3;
     @FXML private ToggleButton sw4;
+    private final Timer timer = new Timer(true); // daemon
 
     private static class ReminderData {
         String taskName = "";
@@ -108,15 +114,40 @@ public class RemindersController {
     private void toggleReminder(ReminderData data, boolean enable, String key) {
         data.enabled = enable;
         saveReminder(data, key);
+
         if (!enable) {
             Dialogs.info("Reminder Off", "Reminder disabled for " + data.taskName);
             return;
         }
+
         if (data.hour < 0 || data.minute < 0 || data.taskName.isEmpty()) {
             Dialogs.info("Error", "Set task name and time first");
             return;
         }
-        String msg = "Reminder: " + data.taskName + " at " + data.timeText;
-        Dialogs.info("Reminder On", msg);
+
+        // Schedule for today
+        LocalTime now = LocalTime.now();
+        LocalTime when = LocalTime.of(data.hour, data.minute);
+        long delayMs = Duration.between(now, when).toMillis();
+
+        if (delayMs <= 0) {
+            Dialogs.info("Error", "Time is in the past for today");
+            return;
+        }
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (!data.enabled) return; // if user turned it off later
+
+                Platform.runLater(() ->
+                        Dialogs.info("Reminder",
+                                "Task: " + data.taskName + "\nTime: " + data.timeText));
+            }
+        }, delayMs);
+
+        Dialogs.info("Reminder On",
+                "Reminder set for " + data.taskName + " at " + data.timeText);
     }
+
 }

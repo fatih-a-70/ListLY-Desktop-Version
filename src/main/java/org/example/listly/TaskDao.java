@@ -1,19 +1,18 @@
 package org.example.listly;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaskDao {
 
     public List<TaskItem> getTasksForList(String listId) {
         List<TaskItem> tasks = new ArrayList<>();
         try (Connection conn = Database.get().getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(
-                        "SELECT * FROM tasks WHERE list_id = ? ORDER BY position")) {
-
+             PreparedStatement pstmt = conn.prepareStatement(
+                     "SELECT * FROM tasks WHERE list_id = ? ORDER BY position")) {
             pstmt.setString(1, listId);
             ResultSet rs = pstmt.executeQuery();
-
             while (rs.next()) {
                 TaskItem task = new TaskItem();
                 task.id = rs.getString("id");
@@ -36,10 +35,11 @@ public class TaskDao {
 
     public void saveTask(TaskItem task) {
         try (Connection conn = Database.get().getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(
-                        "INSERT OR REPLACE INTO tasks (id, list_id, name, checked, start_time, " +
-                                "end_time, text_color, font_style, position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
-
+             PreparedStatement pstmt = conn.prepareStatement(
+                     "INSERT OR REPLACE INTO tasks " +
+                             "(id, list_id, name, checked, start_time, end_time, " +
+                             "text_color, font_style, position) " +
+                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             pstmt.setString(1, task.id);
             pstmt.setString(2, task.listId);
             pstmt.setString(3, task.name);
@@ -57,8 +57,8 @@ public class TaskDao {
 
     public void deleteTask(String taskId) {
         try (Connection conn = Database.get().getConnection();
-                PreparedStatement pstmt = conn.prepareStatement("DELETE FROM tasks WHERE id = ?")) {
-
+             PreparedStatement pstmt =
+                     conn.prepareStatement("DELETE FROM tasks WHERE id = ?")) {
             pstmt.setString(1, taskId);
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -81,29 +81,25 @@ public class TaskDao {
         for (TaskItem task : tasks) {
             long end = task.endTime > 0 ? task.endTime : now;
             long dur = end - task.startTime;
-            if (dur > 0)
-                total += dur;
+            if (dur > 0) total += dur;
         }
         return total;
     }
 
-    // Legacy support methods
-    private static String fileForKey(String key) {
-        return "tasks_" + key + ".dat";
-    }
+    // Legacy-style helpers matching Android key = listId
 
     public static List<TaskItem> loadTasks(String key) {
-        if (key == null)
-            return new ArrayList<>();
-        // Try to find the list_id for this key
+        if (key == null) return new ArrayList<>();
         try (Connection conn = Database.get().getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(
-                        "SELECT id FROM lists WHERE id = ? LIMIT 1")) {
+             PreparedStatement pstmt = conn.prepareStatement(
+                     "SELECT id FROM lists WHERE id = ? LIMIT 1")) {
             pstmt.setString(1, key);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
+                rs.close();
                 return new TaskDao().getTasksForList(key);
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -111,8 +107,7 @@ public class TaskDao {
     }
 
     public static void saveTasks(String key, List<TaskItem> tasks) {
-        if (key == null)
-            return;
+        if (key == null) return;
         TaskDao dao = new TaskDao();
         for (int i = 0; i < tasks.size(); i++) {
             TaskItem task = tasks.get(i);
